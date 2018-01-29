@@ -11,7 +11,6 @@ It can also read a stack of 2D images from a folder (useful when the stack is re
   - IO: folder containing the package
   - setup.py: Installation script
   - README.md: This file
-  - LICENCE: The licence description
 
 ## Basic usage
 Once installed the library can be called the following way (as an example):
