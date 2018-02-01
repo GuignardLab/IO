@@ -1,6 +1,6 @@
 from os.path import exists, splitext, isdir, split as psplit, expanduser as expusr
 import os, fnmatch
-
+import warnings
 from scipy.misc import imsave as _imsave
 from struct import pack,unpack,calcsize
 from pickle import dumps,loads
@@ -9,10 +9,22 @@ import numpy as np
 from spatial_image import SpatialImage
 
 from inrimage import read_inrimage, write_inrimage
-from tif import read_tif, write_tif
-from h5 import read_h5
+try:
+    from tif import read_tif, write_tif
+except Exception as e:
+    warnings.warn('pylibtiff library is not installed')
+
+try:
+    from h5 import read_h5
+except Exception as e:
+    warnings.warn('h5py library is not installed')
+
+try:
+    from klb import read_klb, write_klb
+except Exception as e:
+    warnings.warn('KLB library is not installed')
+
 from folder import read_folder
-from klb import read_klb, write_klb
 
 
 def imread (filename, parallel = True, SP_im = True) :
@@ -93,3 +105,5 @@ def imsave(filename, img):
         write_tif(filename, img)
     elif ext == '.klb':
         write_klb(filename, img)
+    elif ext in ['.h5', '.hdf5']:
+        write_h5(filename, img)
