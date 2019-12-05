@@ -1,7 +1,6 @@
 from os.path import exists, splitext, isdir, split as psplit, expanduser as expusr
 import os, fnmatch
 import warnings
-from scipy.misc import imsave as _imsave
 from struct import pack,unpack,calcsize
 from pickle import dumps,loads
 import numpy as np

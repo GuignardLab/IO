@@ -300,7 +300,7 @@ def pylibtiff_write_file(tif, filename, compression="none",
             total_size += 2 + 4
 
             # entries must be sorted by tag number
-            entries.sort(cmp=lambda x,y: cmp(x.tag, y.tag))
+            entries.sort(key=lambda x: x.tag)
 
             strip_info = strip_offsets, strip_byte_counts, strips_per_image, rows_per_strip, bytes_per_row
             image_directories.append((entries, strip_info, image))
