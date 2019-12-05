@@ -1,6 +1,6 @@
 
 from pyklb import readfull, writefull, readheader
-from spatial_image import SpatialImage
+from .spatial_image import SpatialImage
 import numpy as np
 
 def read_klb(filename, SP_im = True):

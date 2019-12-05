@@ -17,13 +17,13 @@
 This module reads 3D tiff format
 """
 
-from __future__ import division
+
 
 __license__ = "Cecill-C"
 __revision__ = " $Id$ "
 
 import numpy as np
-from spatial_image import SpatialImage
+from .spatial_image import SpatialImage
 
 
 __all__ = []
@@ -68,10 +68,8 @@ def read_tif(filename,channel=0):
 
     # -- prepare metadata dictionnary --
     
-    info_dict = dict( filter( lambda x: len(x)==2,
-                              (inf.split(':') for inf in info_str.split("\n"))
-                              ) )
-    for k,v in info_dict.iteritems():
+    info_dict = dict( [x for x in (inf.split(':') for inf in info_str.split("\n")) if len(x)==2] )
+    for k,v in info_dict.items():
         info_dict[k] = v.strip()
 
     # -- getting the voxelsizes from the tiff image: sometimes
@@ -81,7 +79,7 @@ def read_tif(filename,channel=0):
     # method but it fails, so here we go. --
     if "BoundingBox" in info_dict:
         bbox = info_dict["BoundingBox"]
-        xm, xM, ym, yM, zm, zM = map(float,bbox.split())
+        xm, xM, ym, yM, zm, zM = list(map(float,bbox.split()))
         _vx = (xM-xm)/nx
         _vy = (yM-ym)/ny
         _vz = (zM-zm)/nz
@@ -172,7 +170,7 @@ def write_tif(filename, obj):
                   "YResolution": vsy,
                   #"ZResolution": str(vsz), # : no way to save the spacing (no specific tag)
                   }
-    print extra_info
+    print(extra_info)
     return pylibtiff_write_file(image, filename, info=extra_info)
     #return image.write_file(filename, compression='lzw')
 
@@ -223,7 +221,7 @@ def pylibtiff_write_file(tif, filename, compression="none",
                               lzw = tif_lzw.decode)
         compress = compress_map.get(compression or 'none', None)
         if compress is None:
-            raise NotImplementedError (`compression`)
+            raise NotImplementedError (repr(compression))
         decompress = decompress_map.get(compression or 'none', None)
         # compute tif file size and create image file directories data
         image_directories = []
@@ -245,7 +243,7 @@ def pylibtiff_write_file(tif, filename, compression="none",
                 samples_per_pixel = 1
                 photometric_interpretation = 1
             if sample_format is None:
-                print 'Warning(TIFFimage.write_file): unknown data kind %r, mapping to void' % (image.dtype.kind)
+                print('Warning(TIFFimage.write_file): unknown data kind %r, mapping to void' % (image.dtype.kind))
                 sample_format = 4
             length, width = image.shape
             bytes_per_row = width * image.dtype.itemsize
@@ -273,7 +271,7 @@ def pylibtiff_write_file(tif, filename, compression="none",
                         Software = 'http://code.google.com/p/pylibtiff/'))
 
             entries = []
-            for tagname, value in d.items ():
+            for tagname, value in list(d.items ()):
                 entry = TIFFentry(tagname)
                 entry.add_value(value)
                 entries.append(entry)
@@ -313,7 +311,7 @@ def pylibtiff_write_file(tif, filename, compression="none",
             if end > tif.size:
                 size_incr = int((end - tif.size)/1024**2 + 1)*1024**2
                 new_size = tif.size + size_incr
-                assert end <= new_size, `end, tif.size, size_incr, new_size`
+                assert end <= new_size, repr((end, tif.size, size_incr, new_size))
                 #sys.stdout.write('resizing: %s -> %s\n' % (tif.size, new_size))
                 #tif.resize(end, refcheck=False)
                 tif._mmap.resize(new_size)
@@ -342,7 +340,7 @@ def pylibtiff_write_file(tif, filename, compression="none",
             # write the nof IFD entries
             tif[offset:offset+2].view(dtype=np.uint16)[0] = len(entries)
             offset += 2
-            assert offset <= first_data_offset,`offset, first_data_offset`
+            assert offset <= first_data_offset,repr((offset, first_data_offset))
 
             # write image data
             data = image.view(dtype=np.ubyte).reshape((image.nbytes,))
@@ -351,7 +349,7 @@ def pylibtiff_write_file(tif, filename, compression="none",
                 c = rows_per_strip * bytes_per_row
                 k = j * c
                 c -= max((j+1) * c - image.nbytes, 0)
-                assert c>0,`c`
+                assert c>0,repr(c)
                 orig_strip = data[k:k+c]
                 strip = compress(orig_strip)
                 if validate:
@@ -375,19 +373,19 @@ def pylibtiff_write_file(tif, filename, compression="none",
                 data_size = entry.nbytes
                 if data_size:
                     entry.set_offset(data_offset)
-                    assert data_offset+data_size <= total_size, `data_offset+data_size,total_size`
+                    assert data_offset+data_size <= total_size, repr((data_offset+data_size,total_size))
                     r = entry.toarray(tif[data_offset:data_offset + data_size])
                     assert r.nbytes==data_size
                     data_offset += data_size
-                    assert data_offset <= first_image_data_offset,`data_offset, first_image_data_offset, i`
+                    assert data_offset <= first_image_data_offset,repr((data_offset, first_image_data_offset, i))
                 tif[offset:offset+12] = entry.record
                 offset += 12
-                assert offset <= first_data_offset,`offset, first_data_offset, i`
+                assert offset <= first_data_offset,repr((offset, first_data_offset, i))
 
             # write offset to the next IFD
             tif[offset:offset+4].view(dtype=np.uint32)[0] = offset + 4
             offset += 4
-            assert offset <= first_data_offset,`offset, first_data_offset`
+            assert offset <= first_data_offset,repr((offset, first_data_offset))
 
             if verbose:
                 sys.stdout.write('\r  filling records: %5s%% done (%s/s)%s' \
