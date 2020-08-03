@@ -26,7 +26,7 @@ from os import path
 import numpy as np
 from struct import calcsize,pack,unpack
 import gzip
-from io import StringIO
+from io import StringIO, BytesIO
 from .spatial_image import SpatialImage
 
 __all__ = ["read_inriheader","read_inrimage","write_inrimage"]
@@ -44,9 +44,10 @@ def open_inrifile (filename) :
     Manage the gz attribute
     """
     if path.splitext(filename)[1] in (".gz",".zip") :
-        fzip = gzip.open(filename,'rb')
-        f = StringIO(fzip.read() )
-        fzip.close()
+        with gzip.open(filename,'rb') as fzip:
+#         f = StringIO(fzip.read() )
+            f = BytesIO(fzip.read())
+            fzip.close()
     else :
         f = open(filename,'rb')
 
