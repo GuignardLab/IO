@@ -134,7 +134,7 @@ def read_inrimage (filename) :
 
     #read datas
     size = ntyp.itemsize * xdim * ydim * zdim * vdim
-    mat = np.fromstring(f.read(size),ntyp)
+    mat = np.fromstring(f.read(size).decode('latin-1'),ntyp)
     if vdim != 1 :
         mat = mat.reshape( (vdim,xdim,ydim,zdim), order="F" )
         mat = mat.transpose(1,2,3,0)
