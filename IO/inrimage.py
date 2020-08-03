@@ -45,7 +45,7 @@ def open_inrifile (filename) :
     """
     if path.splitext(filename)[1] in (".gz",".zip") :
         with gzip.open(filename,'rb') as fzip:
-            f = StringIO(fzip.read().decode())
+            f = StringIO(fzip.read().decode('latin-1'))
             fzip.close()
     else :
         f = open(filename,'rb')
