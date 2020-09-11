@@ -1,5 +1,5 @@
 from h5py import File
-from spatial_image import SpatialImage
+from .spatial_image import SpatialImage
 import numpy as np
 
 def read_h5(filename):

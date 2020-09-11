@@ -1,30 +1,29 @@
 from os.path import exists, splitext, isdir, split as psplit, expanduser as expusr
 import os, fnmatch
 import warnings
-from scipy.misc import imsave as _imsave
 from struct import pack,unpack,calcsize
 from pickle import dumps,loads
 import numpy as np
 
-from spatial_image import SpatialImage
+from .spatial_image import SpatialImage
 
-from inrimage import read_inrimage, write_inrimage
+from .inrimage import read_inrimage, write_inrimage
 try:
-    from tif import read_tif, write_tif
+    from .tif import read_tif, write_tif
 except Exception as e:
     warnings.warn('pylibtiff library is not installed')
 
 try:
-    from h5 import read_h5
+    from .h5 import read_h5
 except Exception as e:
     warnings.warn('h5py library is not installed')
 
 try:
-    from klb import read_klb, write_klb
+    from .klb import read_klb, write_klb
 except Exception as e:
     warnings.warn('KLB library is not installed')
 
-from folder import read_folder
+from .folder import read_folder
 
 
 def imread (filename, parallel = True, SP_im = True) :
