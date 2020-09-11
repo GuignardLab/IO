@@ -92,7 +92,7 @@ def imsave(filename, img):
     if not exists(head):
         raise IOError("The directory do not exist: %s" % head)
 
-    is2D = img.shape[2] == 1
+    # is2D = img.shape[2] == 1
     ext = ext.lower()
     if ext == ".gz":
         root, ext = splitext(root)
