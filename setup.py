@@ -25,5 +25,5 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     packages=['IO'],
-    install_requires=['scipy', 'numpy', 'h5py', 'libtiff'],
+    install_requires=['scipy', 'numpy', 'h5py', 'tifffile'],
 )
