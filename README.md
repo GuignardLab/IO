@@ -28,8 +28,8 @@ Some dependecies are requiered:
     - tifffile (https://pypi.org/project/tifffile/)
     
 ## Quick install
-To quickly install the script so it can be call from the terminal and install too the common dependecies one can run
+To quickly install the script so it can be call from the terminal and install too the common dependecies one can run from the IO folder:
 ```shell
-python setup.py install [--user]
+pip install .
 ```
 Still will be remaining to install pyklb package.
