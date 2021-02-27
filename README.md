@@ -25,7 +25,7 @@ Some dependecies are requiered:
   - Image reading dependencies:
     - h5py (https://pypi.python.org/pypi/h5py)
     - pyklb (https://github.com/bhoeckendorf/pyklb)
-    - pylibtiff (https://github.com/pearu/pylibtiff)
+    - tifffile (https://pypi.org/project/tifffile/)
     
 ## Quick install
 To quickly install the script so it can be call from the terminal and install too the common dependecies one can run
