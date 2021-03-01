@@ -26,7 +26,7 @@ from os import path
 import numpy as np
 from struct import calcsize,pack,unpack
 import gzip
-from io import StringIO
+from io import BytesIO
 from .spatial_image import SpatialImage
 
 __all__ = ["read_inriheader","read_inrimage","write_inrimage"]
@@ -45,11 +45,10 @@ def open_inrifile (filename) :
     """
     if path.splitext(filename)[1] in (".gz",".zip") :
         with gzip.open(filename,'rb') as fzip:
-            f = StringIO(fzip.read().decode('latin-1'))
+            f = BytesIO(fzip.read())
             fzip.close()
     else :
         f = open(filename,'rb')
-
     return f
 
 def _read_header (f) :
@@ -59,7 +58,7 @@ def _read_header (f) :
     #read header string
     header = ""
     while header[-4:] != "##}\n" :
-        header += f.read(256)
+        header += f.read(256).decode('latin-1')
 
     #read infos in header
     prop = {}
@@ -134,7 +133,7 @@ def read_inrimage (filename) :
 
     #read datas
     size = ntyp.itemsize * xdim * ydim * zdim * vdim
-    mat = np.fromstring(f.read(size).decode('latin-1'),ntyp)
+    mat = np.frombuffer(f.read(size),ntyp)
     if vdim != 1 :
         mat = mat.reshape( (vdim,xdim,ydim,zdim), order="F" )
         mat = mat.transpose(1,2,3,0)

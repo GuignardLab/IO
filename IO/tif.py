@@ -94,7 +94,7 @@ def read_tif(filename,channel=0):
 
     # # TIF reader
     # tif = libtiff.TIFF.open(filename)
-    
+
     # if tif.GetField('ImageDescription'):
     #     tif = TIFFfile(filename)
     #     arr = tif.get_tiff_array()
@@ -115,7 +115,7 @@ def read_tif(filename,channel=0):
     # nx, ny, nz = _data.shape
 
     # # -- prepare metadata dictionnary --
-    
+
     # info_dict = dict( [x for x in (inf.split(':') for inf in info_str.split("\n")) if len(x)==2] )
     # for k,v in info_dict.items():
     #     info_dict[k] = v.strip()
@@ -223,9 +223,12 @@ def write_tif(filename, obj):
     vy = 1./res[1]
     if is3D:
         spacing = res[2]
+        metadata = {'spacing': spacing, 'axes': 'ZYX'}
+    else:
+    	metadata = {}
 
     imwrite(filename, obj.T, imagej=True, resolution=(vx, vy),
-            metadata={'spacing': spacing, 'axes': 'ZYX'})
+            metadata=metadata)
 
     # obj = obj.T
     # image = TIFFimage(obj)
