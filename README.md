@@ -26,6 +26,35 @@ Some dependecies are requiered:
     - h5py (https://pypi.python.org/pypi/h5py)
     - pyklb (https://github.com/bhoeckendorf/pyklb)
     - tifffile (https://pypi.org/project/tifffile/)
+
+If one wants to read and write klb file the pyklb (https://github.com/bhoeckendorf/pyklb) library is required. One can install it the following way (in `[]` are the optional commands, in `<>` are the place where the path has to be replace with the adequate one):
+```shell
+pip install cython [--user]
+git clone https://github.com/bhoeckendorf/pyklb.git
+cd pyklb
+python setup.py bdist_wheel
+pip install dist/<name_of_the_wheel>.whl [--user]
+```
+
+Then you need to manually link the pyklb libraries to your python environement:
+```shell
+path_lib='~/.local/lib' #This is an example that should work on linux
+ln build/lib.<name-of-version>.<python-version>/pyklb.so $path_lib #links the two libraries to your libraries folder
+ln build/lib/libklb.so $path_lib
+
+echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'$path_lib >> ~/.bashrc #replace .bashrc by .profile for macOs for example
+echo 'export PYTHONPATH=$PYTHONPATH:'$path_lib >> ~/.bashrc #replace .bashrc by .profile for macOs for example
+```
+
+Then you can either open a new terminal or run the following command:
+```shell
+source ~/.bashrc
+```
+
+To check if pyklb is correctly installed, one should be able to run the following command in python:
+```python
+import pyklb
+```
     
 ## Quick install
 To quickly install the script so it can be call from the terminal and install too the common dependecies one can run from the IO folder:
