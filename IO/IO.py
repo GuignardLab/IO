@@ -14,7 +14,7 @@ except Exception as e:
     warnings.warn('pylibtiff library is not installed')
 
 try:
-    from .h5 import read_h5
+    from .h5 import read_h5, write_h5
 except Exception as e:
     warnings.warn('h5py library is not installed')
 
