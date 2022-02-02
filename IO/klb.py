@@ -16,6 +16,11 @@ def read_klb(filename, SP_im = True):
 
 def write_klb(filename, im):
     if np.isfortran(im):
-        writefull(im.transpose(2, 1, 0), filename, pixelspacing_tczyx = (1, 1) + tuple(im.resolution[::-1]))
+        if len(im.shape) == 3:
+            writefull(im.transpose(2, 1, 0), filename,
+                      pixelspacing_tczyx = (1, 1) + tuple(im.resolution[::-1]))
+        else:
+            writefull(im.transpose(1, 0), filename,
+                      pixelspacing_tczyx = (1, 1) + tuple(im.resolution[::-1]))
     else:    
         writefull(im, filename)

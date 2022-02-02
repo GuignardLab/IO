@@ -57,6 +57,8 @@ def read_tif(filename,channel=0):
             description = tif.pages[0].tags['ImageDescription'].value.split('\n')
             separator = set.intersection(*[set(k) for k in description]).pop()
             info_dict = {v.split(separator)[0]: format_digit(v.split(separator)[1]) for v in description}
+        else:
+            info_dict = {}
 
         if 'XResolution' in tif.pages[0].tags:
             vx = tif.pages[0].tags['XResolution'].value
@@ -86,9 +88,13 @@ def read_tif(filename,channel=0):
         im = tif.asarray()
         if len(im.shape) == 3:
             im = np.transpose(im, (2, 1, 0))
-        else:
+        elif len(im.shape) == 2:
             im = np.transpose(im, (1, 0))
-        im = SpatialImage(im, (vx, vy, vz))
+        if 3 <= len(im.shape):
+            im = SpatialImage(im, (vx, vy, vz))
+        else:
+            print(im.shape, vx, vy)
+            im = SpatialImage(im, (vx, vy))
         im.resolution = (vx, vy, vz)
 
 
