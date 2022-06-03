@@ -233,8 +233,11 @@ def write_tif(filename, obj):
     else:
     	metadata = {}
 
-    imwrite(filename, obj.T, imagej=True, resolution=(vx, vy),
-            metadata=metadata)
+    if obj.dtype.char in 'BHhf':
+        imwrite(filename, obj.T, imagej=True, resolution=(vx, vy),
+                metadata=metadata)
+    else:
+        imwrite(filename, obj.T)
 
     # obj = obj.T
     # image = TIFFimage(obj)
